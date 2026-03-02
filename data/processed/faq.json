@@ -1,0 +1,556 @@
+[
+    {
+        "keywords": [
+            "fund manager",
+            "manager",
+            "who manage",
+            "managed by",
+            "portfolio manager"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap"
+        ],
+        "answer": "SBI Flexicap Fund is managed by Mr. R. Srinivasan (Head of Equities, SBI Mutual Fund) along with Mr. Mohit Jain. Mr. Srinivasan has over 25 years of experience in equity markets.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme": "SBI Flexicap Fund"
+    },
+    {
+        "keywords": [
+            "fund manager",
+            "manager",
+            "who manage",
+            "managed by",
+            "portfolio manager"
+        ],
+        "funds": [
+            "large cap",
+            "bluechip",
+            "largecap"
+        ],
+        "answer": "SBI Large Cap Fund is managed by Mr. Sohini Andani (Fund Manager). She has over 22 years of experience in the capital markets and has been managing this fund since 2010.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme": "SBI Large Cap Fund"
+    },
+    {
+        "keywords": [
+            "fund manager",
+            "manager",
+            "who manage",
+            "managed by",
+            "portfolio manager"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund is managed by Mr. Dinesh Ahuja (Fund Manager) along with Mr. Mohit Jain for overseas investments.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "fund manager",
+            "manager",
+            "who manage",
+            "managed by",
+            "portfolio manager"
+        ],
+        "funds": [
+            "nifty",
+            "index"
+        ],
+        "answer": "SBI Nifty Index Fund is managed by Mr. Raviprakash Sharma (Fund Manager). As a passive index fund, it tracks the Nifty 50 index with minimal active intervention.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme": "SBI Nifty Index Fund"
+    },
+    {
+        "keywords": [
+            "benchmark",
+            "index track",
+            "tracks"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap"
+        ],
+        "answer": "SBI Flexicap Fund benchmarks against the NIFTY 500 TRI (Total Return Index), which represents the top 500 companies by market capitalization across large, mid, and small cap segments.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme": "SBI Flexicap Fund"
+    },
+    {
+        "keywords": [
+            "benchmark",
+            "index track",
+            "tracks"
+        ],
+        "funds": [
+            "large cap",
+            "bluechip",
+            "largecap"
+        ],
+        "answer": "SBI Large Cap Fund benchmarks against the NIFTY 100 TRI (Total Return Index), which represents the top 100 companies by market capitalization listed on NSE.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme": "SBI Large Cap Fund"
+    },
+    {
+        "keywords": [
+            "benchmark",
+            "index track",
+            "tracks"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund benchmarks against the NIFTY 500 TRI (Total Return Index).",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "benchmark",
+            "index track",
+            "tracks"
+        ],
+        "funds": [
+            "nifty",
+            "index"
+        ],
+        "answer": "SBI Nifty Index Fund tracks the NIFTY 50 TRI (Total Return Index). The fund aims to replicate the performance of the Nifty 50, which consists of the 50 largest and most liquid companies on NSE.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme": "SBI Nifty Index Fund"
+    },
+    {
+        "keywords": [
+            "minimum",
+            "sip",
+            "minimum investment",
+            "minimum amount",
+            "lump sum",
+            "lumpsum",
+            "minimum sip"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap"
+        ],
+        "answer": "For SBI Flexicap Fund: Minimum SIP amount is ₹500 per month. Minimum lump sum investment is ₹5,000. Additional purchase minimum is ₹1,000.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme": "SBI Flexicap Fund"
+    },
+    {
+        "keywords": [
+            "minimum",
+            "sip",
+            "minimum investment",
+            "minimum amount",
+            "lump sum",
+            "lumpsum",
+            "minimum sip"
+        ],
+        "funds": [
+            "large cap",
+            "bluechip",
+            "largecap"
+        ],
+        "answer": "For SBI Large Cap Fund: Minimum SIP amount is ₹500 per month. Minimum lump sum investment is ₹5,000. Additional purchase minimum is ₹1,000.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme": "SBI Large Cap Fund"
+    },
+    {
+        "keywords": [
+            "minimum",
+            "sip",
+            "minimum investment",
+            "minimum amount",
+            "lump sum",
+            "lumpsum",
+            "minimum sip"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "For SBI ELSS Tax Saver Fund: Minimum SIP amount is ₹500 per month. Minimum lump sum investment is ₹500. Additional purchase minimum is ₹500. Note: 3-year lock-in applies per SIP installment.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "minimum",
+            "sip",
+            "minimum investment",
+            "minimum amount",
+            "lump sum",
+            "lumpsum",
+            "minimum sip"
+        ],
+        "funds": [
+            "nifty",
+            "index"
+        ],
+        "answer": "For SBI Nifty Index Fund: Minimum SIP amount is ₹500 per month. Minimum lump sum investment is ₹5,000. Additional purchase minimum is ₹1,000.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme": "SBI Nifty Index Fund"
+    },
+    {
+        "keywords": [
+            "redeem",
+            "redemption",
+            "withdraw",
+            "how to sell",
+            "how to withdraw"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap",
+            "large cap",
+            "bluechip",
+            "largecap",
+            "elss",
+            "tax saver",
+            "long term equity",
+            "nifty",
+            "index"
+        ],
+        "answer": "To redeem SBI Mutual Fund units: (1) Log in to Groww, Zerodha, or directly at investor.sbimf.com. (2) Select your fund and redemption amount. (3) Proceeds are credited to your registered bank account within T+3 working days (equity funds). For ELSS, redemption is only allowed after the 3-year lock-in period per installment.",
+        "source": "https://www.sbimf.com/en-us/investor-corner/investor-services",
+        "scheme": "SBI Mutual Funds"
+    },
+    {
+        "keywords": [
+            "capital gain",
+            "tax",
+            "taxation",
+            "ltcg",
+            "stcg"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap",
+            "large cap",
+            "bluechip",
+            "largecap",
+            "nifty",
+            "index"
+        ],
+        "answer": "For SBI equity funds (Flexicap, Large Cap, Nifty Index): STCG (held < 1 year) is taxed at 20%. LTCG (held > 1 year) gains above ₹1.25 lakh are taxed at 12.5% without indexation. For SBI ELSS: LTCG above ₹1.25 lakh at 12.5%; no STCG applicable due to 3-year lock-in.",
+        "source": "https://investor.sebi.gov.in/",
+        "scheme": "SBI Mutual Funds"
+    },
+    {
+        "keywords": [
+            "capital gain",
+            "tax",
+            "taxation",
+            "ltcg",
+            "stcg"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund provides tax deduction up to ₹1.5 lakh under Section 80C. After the mandatory 3-year lock-in, LTCG above ₹1.25 lakh is taxed at 12.5%. No STCG tax applies due to the lock-in period.",
+        "source": "https://investor.sebi.gov.in/",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "nav",
+            "current nav",
+            "price",
+            "today nav"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap"
+        ],
+        "answer": "SBI Flexicap Fund NAV as of Jan 2025: Regular Growth ≈ ₹113.20, Direct Growth ≈ ₹126.50. For live NAV, check the official SBI MF website or AMFI website (amfiindia.com).",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme": "SBI Flexicap Fund"
+    },
+    {
+        "keywords": [
+            "nav",
+            "current nav",
+            "price",
+            "today nav"
+        ],
+        "funds": [
+            "large cap",
+            "bluechip",
+            "largecap"
+        ],
+        "answer": "SBI Large Cap Fund NAV as of Jan 2025: Regular Growth ≈ ₹82.50, Direct Growth ≈ ₹94.20. For live NAV, check the official SBI MF website or AMFI website (amfiindia.com).",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme": "SBI Large Cap Fund"
+    },
+    {
+        "keywords": [
+            "nav",
+            "current nav",
+            "price",
+            "today nav"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund NAV as of Jan 2025: Regular Growth ≈ ₹45.80, Direct Growth ≈ ₹52.10. For live NAV, check the official SBI MF website or AMFI website (amfiindia.com).",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "nav",
+            "current nav",
+            "price",
+            "today nav"
+        ],
+        "funds": [
+            "nifty",
+            "index"
+        ],
+        "answer": "SBI Nifty Index Fund NAV as of Jan 2025: Regular Growth ≈ ₹216.30, Direct Growth ≈ ₹231.50. For live NAV, check the official SBI MF website or AMFI website (amfiindia.com).",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme": "SBI Nifty Index Fund"
+    },
+    {
+        "keywords": [
+            "aum",
+            "asset under management",
+            "fund size",
+            "corpus"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap"
+        ],
+        "answer": "SBI Flexicap Fund has an AUM (Assets Under Management) of approximately ₹24,000+ Crores as of Jan 2025, making it one of the largest flexi cap funds in India.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme": "SBI Flexicap Fund"
+    },
+    {
+        "keywords": [
+            "aum",
+            "asset under management",
+            "fund size",
+            "corpus"
+        ],
+        "funds": [
+            "large cap",
+            "bluechip",
+            "largecap"
+        ],
+        "answer": "SBI Large Cap Fund has an AUM of approximately ₹35,000+ Crores as of Jan 2025.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme": "SBI Large Cap Fund"
+    },
+    {
+        "keywords": [
+            "aum",
+            "asset under management",
+            "fund size",
+            "corpus"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund has an AUM of approximately ₹25,000+ Crores as of Jan 2025.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "aum",
+            "asset under management",
+            "fund size",
+            "corpus"
+        ],
+        "funds": [
+            "nifty",
+            "index"
+        ],
+        "answer": "SBI Nifty Index Fund has an AUM of approximately ₹7,000+ Crores as of Jan 2025.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme": "SBI Nifty Index Fund"
+    },
+    {
+        "keywords": [
+            "statement",
+            "account statement",
+            "download statement",
+            "capital gain statement"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap",
+            "large cap",
+            "bluechip",
+            "largecap",
+            "elss",
+            "tax saver",
+            "long term equity",
+            "nifty",
+            "index"
+        ],
+        "answer": "To download your SBI MF account statement or capital gains statement: (1) Visit investor.sbimf.com or use the SBI MF app. (2) Login with your PAN and registered email/mobile. (3) Go to 'Reports' → 'Account Statement' or 'Capital Gains'. Statements can also be obtained from CAS (Consolidated Account Statement) via CAMS or KFintech.",
+        "source": "https://www.sbimf.com/en-us/investor-corner/investor-services/download-statement",
+        "scheme": "SBI Mutual Funds"
+    },
+    {
+        "keywords": [
+            "risk",
+            "risk level",
+            "risk rating",
+            "riskometer"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap"
+        ],
+        "answer": "SBI Flexicap Fund is rated as 'Very High Risk' on the SEBI riskometer. This is typical for equity funds that invest across large, mid, and small cap stocks.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme": "SBI Flexicap Fund"
+    },
+    {
+        "keywords": [
+            "risk",
+            "risk level",
+            "risk rating",
+            "riskometer"
+        ],
+        "funds": [
+            "large cap",
+            "bluechip",
+            "largecap"
+        ],
+        "answer": "SBI Large Cap Fund is rated as 'Very High Risk' on the SEBI riskometer, as it invests in equity and equity-related instruments of large cap companies.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme": "SBI Large Cap Fund"
+    },
+    {
+        "keywords": [
+            "risk",
+            "risk level",
+            "risk rating",
+            "riskometer"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund is rated as 'Very High Risk' on the SEBI riskometer, as it invests predominantly in equity instruments.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "risk",
+            "risk level",
+            "risk rating",
+            "riskometer"
+        ],
+        "funds": [
+            "nifty",
+            "index"
+        ],
+        "answer": "SBI Nifty Index Fund is rated as 'Very High Risk' on the SEBI riskometer, as it passively invests in the top 50 large-cap equity stocks of the Nifty 50 index.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme": "SBI Nifty Index Fund"
+    },
+    {
+        "keywords": [
+            "section 80c",
+            "tax saving",
+            "tax benefit",
+            "tax deduction",
+            "80c"
+        ],
+        "funds": [
+            "elss",
+            "tax saver",
+            "long term equity"
+        ],
+        "answer": "SBI ELSS Tax Saver Fund qualifies for tax deduction under Section 80C of the Income Tax Act. You can claim up to ₹1.5 lakh deduction per financial year. The mandatory lock-in is 3 years.",
+        "source": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme": "SBI ELSS Tax Saver Fund"
+    },
+    {
+        "keywords": [
+            "dividend",
+            "dividend option",
+            "idcw",
+            "payout"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap",
+            "large cap",
+            "bluechip",
+            "largecap",
+            "elss",
+            "tax saver",
+            "long term equity",
+            "nifty",
+            "index"
+        ],
+        "answer": "SBI Mutual Funds offer IDCW (Income Distribution cum Capital Withdrawal) option (formerly Dividend) and Growth option. IDCW payouts are not guaranteed and depend on the fund's distributable surplus. Growth option reinvests all earnings for compounding.",
+        "source": "https://www.sbimf.com/",
+        "scheme": "SBI Mutual Funds"
+    },
+    {
+        "keywords": [
+            "folio",
+            "folio number",
+            "account number"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap",
+            "large cap",
+            "bluechip",
+            "largecap",
+            "elss",
+            "tax saver",
+            "long term equity",
+            "nifty",
+            "index"
+        ],
+        "answer": "Your SBI MF folio number is your unique account identifier. You can find it on your account statement or by logging into investor.sbimf.com. Each investor has one folio number across all SBI MF schemes.",
+        "source": "https://www.sbimf.com/en-us/investor-corner/investor-services",
+        "scheme": "SBI Mutual Funds"
+    },
+    {
+        "keywords": [
+            "kyc",
+            "know your customer",
+            "kyc status",
+            "kyc compliant"
+        ],
+        "funds": [
+            "flexicap",
+            "flexi cap",
+            "large cap",
+            "bluechip",
+            "largecap",
+            "elss",
+            "tax saver",
+            "long term equity",
+            "nifty",
+            "index"
+        ],
+        "answer": "KYC (Know Your Customer) is mandatory for all mutual fund investments in India. You can check your KYC status at kvbnsdl.com or camskra.com. If KYC is not done, complete it via your broker (Groww, Zerodha) or at any KRA (KYC Registration Agency) office with PAN, Aadhaar, and photos.",
+        "source": "https://investor.sebi.gov.in/",
+        "scheme": "General"
+    }
+]

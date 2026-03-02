@@ -274,28 +274,56 @@ def render_fact(answer, url, scheme):
     </div>
     """, unsafe_allow_html=True)
 
-@st.cache_resource
-def get_rag():
+@st.cache_data
+def load_faq():
+    """Load the comprehensive FAQ database from JSON."""
     try:
-        from rag import RAGAssistant
-        return RAGAssistant()
-    except Exception as e:
-        st.session_state["rag_error"] = str(e)
-        return None
+        with open("data/processed/faq.json", "r") as f:
+            return json.load(f)
+    except Exception:
+        return []
 
-def llm_answer(query, fund_name, url):
-    """Use the full RAG pipeline for questions not answered by JSON lookups."""
-    rag = get_rag()
-    if not rag:
-        err = st.session_state.get("rag_error", "RAG failed to load.")
-        st.warning(f"Could not load the full RAG assistant: `{err}`\n\nFor now, only portfolio/performance/factual queries are supported.")
-        return
-    with st.spinner("Searching official sources..."):
-        result = rag.get_answer(query)
-    answer = result.get("answer", "")
-    source = result.get("source", url)
-    scheme = result.get("scheme", fund_name)
-    render_fact(answer, source, scheme)
+def faq_answer(query, fund_name, url):
+    """Match query against FAQ database using keyword scoring."""
+    q = query.lower()
+    faqs = load_faq()
+    
+    # Identify which fund keywords appear in the query
+    fund_keywords = []
+    q_lower = q
+    for fund in FUND_MAP:
+        if any(kw in q_lower for kw in fund["keywords"]):
+            fund_keywords = fund["keywords"]
+            break
+
+    best_score = 0
+    best_match = None
+
+    for faq in faqs:
+        # Score: count how many FAQ keywords appear in query
+        score = sum(1 for kw in faq["keywords"] if kw in q)
+        if score == 0:
+            continue
+        
+        # Boost score if fund matches
+        faq_funds = [f.lower() for f in faq.get("funds", [])]
+        fund_matches = any(kw in q for kw in faq_funds)
+        if fund_matches:
+            score += 2
+
+        if score > best_score:
+            best_score = score
+            best_match = faq
+
+    if best_match and best_score >= 1:
+        render_fact(best_match["answer"], best_match["source"], best_match["scheme"])
+    else:
+        st.info(
+            f"ℹ️ I don't have specific information about that query in my knowledge base. "
+            f"Please visit the [official SBI MF website]({url}) for detailed information, "
+            f"or ask about: expense ratio, exit load, portfolio, performance, fund manager, "
+            f"benchmark, SIP amount, tax, NAV, AUM, or redemption."
+        )
 
 # =====================================================================
 # Main processing
@@ -337,8 +365,8 @@ def process_query(query):
         render_fact(answer, url, fund["name"])
         return
 
-    # LLM fallback (needs API key)
-    llm_answer(q, fund["name"], fund["url"])
+    # FAQ keyword-based lookup (no API needed)
+    faq_answer(q, fund["name"], fund["url"])
 
 # =====================================================================
 # Quick Chips UI
