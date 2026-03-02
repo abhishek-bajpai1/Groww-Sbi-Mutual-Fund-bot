@@ -6,19 +6,35 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def _get_api_key():
+    """Reliably get the Google API key from environment."""
+    return (
+        os.environ.get("GOOGLE_API_KEY") or
+        os.environ.get("GEMINI_API_KEY") or
+        ""
+    )
+
 class RAGAssistant:
     def __init__(self, db_path="vectorstore/faiss_index"):
-        self.embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+        api_key = _get_api_key()
+        # Explicitly pass api_key to avoid env var lookup issues on cloud platforms
+        self.embeddings = GoogleGenerativeAIEmbeddings(
+            model="models/gemini-embedding-001",
+            google_api_key=api_key
+        )
         self.vectorstore = FAISS.load_local(
             db_path,
             self.embeddings,
             allow_dangerous_deserialization=True
         )
-        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+        self.llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            temperature=0,
+            google_api_key=api_key
+        )
 
     def get_answer(self, query: str) -> dict:
         """ Retrieves context and generates a structured answer. """
-        # Search for top 3 relevant chunks
         docs = self.vectorstore.similarity_search(query, k=3)
 
         if not docs:

@@ -4,28 +4,32 @@ import os
 import sys
 
 # =====================================================================
-# CRITICAL: Inject API key from Streamlit Secrets into os.environ
-# BEFORE any LangChain / Google AI modules are imported.
-# Streamlit Cloud does NOT use .env files — only st.secrets.
+# CRITICAL: Read API key from Streamlit Secrets and inject into os.environ
+# This must happen at module level, before any LangChain imports.
 # =====================================================================
-try:
-    api_key = (
-        st.secrets.get("GOOGLE_API_KEY") or
-        st.secrets.get("GEMINI_API_KEY") or
-        None
-    )
-    if api_key:
-        os.environ["GOOGLE_API_KEY"] = api_key
-        os.environ["GEMINI_API_KEY"] = api_key
-except Exception:
-    pass  # Local dev — fall back to .env
+def _resolve_api_key():
+    """Read GOOGLE_API_KEY from st.secrets or os.environ."""
+    try:
+        key = (
+            st.secrets.get("GOOGLE_API_KEY") or
+            st.secrets.get("GEMINI_API_KEY") or
+            ""
+        )
+        if key:
+            os.environ["GOOGLE_API_KEY"] = key
+            os.environ["GEMINI_API_KEY"] = key
+            return key
+    except Exception:
+        pass
+    # Local dev fallback
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except Exception:
+        pass
+    return os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY") or ""
 
-# Load .env for local development (no-op on Streamlit Cloud)
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except Exception:
-    pass
+GOOGLE_API_KEY = _resolve_api_key()
 
 # =====================================================================
 # App Config
