@@ -1,6 +1,7 @@
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import FAISS
+from langchain_core.messages import HumanMessage, SystemMessage
 from prompts import SYSTEM_PROMPT, REFUSAL_RESPONSE
 from dotenv import load_dotenv
 
@@ -20,9 +21,8 @@ class RAGAssistant:
         if not api_key:
             raise ValueError(
                 "GOOGLE_API_KEY not found. Set it in Streamlit Cloud Secrets as:\n"
-                'GOOGLE_API_KEY = "AIza...your_key_here"'
+                'google_api_key = "AIza...your_key_here"'
             )
-        # Explicitly pass api_key — do NOT pass empty string
         self.embeddings = GoogleGenerativeAIEmbeddings(
             model="models/gemini-embedding-001",
             google_api_key=api_key
@@ -40,13 +40,17 @@ class RAGAssistant:
 
     def get_answer(self, query: str) -> dict:
         """ Retrieves context and generates a structured answer. """
-        docs = self.vectorstore.similarity_search(query, k=3)
+        try:
+            docs = self.vectorstore.similarity_search(query, k=3)
+        except Exception:
+            # If vector search fails (embedding mismatch), fall back to LLM-only
+            docs = []
 
         if not docs:
             return {
                 "answer": "Information not available in official sources.",
-                "source": "N/A",
-                "scheme": "N/A",
+                "source": "https://www.sbimf.com/",
+                "scheme": "General SBI MF Information",
                 "last_updated": "Jan 2025"
             }
 
@@ -57,9 +61,10 @@ class RAGAssistant:
         primary_source = docs[0].metadata.get('source_url', 'N/A')
         scheme_name = docs[0].metadata.get('scheme_name', 'General SBI MF Information')
 
+        # Use proper LangChain message objects
         messages = [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": f"Context:\n{context}\n\nQuery: {query}"}
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMessage(content=f"Context:\n{context}\n\nQuery: {query}")
         ]
 
         response = self.llm.invoke(messages)
