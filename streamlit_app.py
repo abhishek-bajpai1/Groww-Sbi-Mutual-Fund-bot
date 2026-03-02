@@ -8,11 +8,13 @@ import sys
 # This must happen at module level, before any LangChain imports.
 # =====================================================================
 def _resolve_api_key():
-    """Read GOOGLE_API_KEY from st.secrets or os.environ."""
+    """Read GOOGLE_API_KEY from st.secrets or os.environ (checks all casing variants)."""
     try:
         key = (
             st.secrets.get("GOOGLE_API_KEY") or
+            st.secrets.get("google_api_key") or      # ← lowercase (user's value)
             st.secrets.get("GEMINI_API_KEY") or
+            st.secrets.get("gemini_api_key") or
             ""
         )
         if key:
