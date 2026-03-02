@@ -2,9 +2,21 @@ import streamlit as st
 import json
 import os
 import sys
-from dotenv import load_dotenv
 
-load_dotenv()
+# --- CRITICAL: Inject secrets into env BEFORE importing any LangChain/Gemini modules ---
+# On Streamlit Cloud, secrets come from st.secrets (set in app dashboard), not .env files.
+try:
+    if "GOOGLE_API_KEY" in st.secrets:
+        os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+except Exception:
+    pass  # Local dev: fall back to .env
+
+# Now safe to load dotenv for local development
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 
 # --- Page Config ---
 st.set_page_config(
@@ -220,6 +232,7 @@ def load_rag():
         from rag import RAGAssistant
         return RAGAssistant()
     except Exception as e:
+        st.session_state["rag_error"] = str(e)
         return None
 
 # --- Fund routing logic ---
@@ -326,7 +339,8 @@ def process_query(query):
 
     rag = load_rag()
     if not rag:
-        st.error("The RAG assistant could not be initialized. Please check the GOOGLE_API_KEY secret and ensure the vectorstore is built.")
+        err = st.session_state.get("rag_error", "Unknown error")
+        st.error(f"⚠️ RAG assistant could not initialize.\n\n**Error:** `{err}`\n\nCheck that `GOOGLE_API_KEY` is set in your Streamlit Cloud secrets.")
         return
 
     with st.spinner("Searching official sources..."):
