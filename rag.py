@@ -17,7 +17,12 @@ def _get_api_key():
 class RAGAssistant:
     def __init__(self, db_path="vectorstore/faiss_index"):
         api_key = _get_api_key()
-        # Explicitly pass api_key to avoid env var lookup issues on cloud platforms
+        if not api_key:
+            raise ValueError(
+                "GOOGLE_API_KEY not found. Set it in Streamlit Cloud Secrets as:\n"
+                'GOOGLE_API_KEY = "AIza...your_key_here"'
+            )
+        # Explicitly pass api_key — do NOT pass empty string
         self.embeddings = GoogleGenerativeAIEmbeddings(
             model="models/gemini-embedding-001",
             google_api_key=api_key

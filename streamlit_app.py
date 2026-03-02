@@ -32,6 +32,30 @@ def _resolve_api_key():
 GOOGLE_API_KEY = _resolve_api_key()
 
 # =====================================================================
+# Sidebar: API Key Diagnostics
+# =====================================================================
+with st.sidebar:
+    st.markdown("### 🔧 Debug Info")
+    if GOOGLE_API_KEY:
+        st.success(f"✅ API Key found ({len(GOOGLE_API_KEY)} chars)")
+    else:
+        st.error("❌ API Key NOT found")
+        st.markdown("**Available secret keys:**")
+        try:
+            keys = list(st.secrets.keys())
+            if keys:
+                for k in keys:
+                    st.code(k)
+            else:
+                st.warning("No secrets configured!")
+        except Exception as e:
+            st.warning(f"Could not read secrets: {e}")
+        st.markdown("""**To fix:** Go to Streamlit Cloud → App Settings → Secrets → add:
+```
+GOOGLE_API_KEY = "AIza...your_key_here"
+```""")
+
+# =====================================================================
 # App Config
 # =====================================================================
 st.set_page_config(
