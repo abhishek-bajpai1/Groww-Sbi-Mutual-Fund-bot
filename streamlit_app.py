@@ -37,25 +37,31 @@ GOOGLE_API_KEY = _resolve_api_key()
 # Sidebar: API Key Diagnostics
 # =====================================================================
 with st.sidebar:
-    st.markdown("### 🔧 Debug Info")
-    if GOOGLE_API_KEY:
-        st.success(f"✅ API Key found ({len(GOOGLE_API_KEY)} chars)")
-    else:
-        st.error("❌ API Key NOT found")
-        st.markdown("**Available secret keys:**")
-        try:
-            keys = list(st.secrets.keys())
-            if keys:
-                for k in keys:
-                    st.code(k)
-            else:
-                st.warning("No secrets configured!")
-        except Exception as e:
-            st.warning(f"Could not read secrets: {e}")
-        st.markdown("""**To fix:** Go to Streamlit Cloud → App Settings → Secrets → add:
-```
-GOOGLE_API_KEY = "AIza...your_key_here"
-```""")
+    st.markdown("## 🌱 SBI MF Quick Reference")
+    st.markdown("---")
+    st.markdown("**Supported Funds:**")
+    fund_info = [
+        ("🔵", "SBI Flexicap", "TER: 0.83% (D) / 1.66% (R)"),
+        ("🟢", "SBI Large Cap", "TER: 0.80% (D) / 1.48% (R)"),
+        ("🟡", "SBI ELSS", "TER: 0.89% (D) / 1.57% (R)"),
+        ("🟣", "SBI Nifty Index", "TER: 0.19% (D) / 0.40% (R)"),
+    ]
+    for emoji, name, ter in fund_info:
+        st.markdown(f"{emoji} **{name}**  \n{ter}")
+    st.markdown("---")
+    st.markdown("**📚 Sample Questions:**")
+    st.markdown("""
+- Expense ratio of SBI ELSS?
+- Who manages SBI Flexicap?
+- What is CAGR?
+- SIP vs Lumpsum?
+- Direct vs Regular plan?
+- Lock-in for ELSS?
+- How to redeem SBI Large Cap?
+- What is Section 80C?
+    """)
+    st.markdown("---")
+    st.caption("Source: SBI MF Official, SEBI, AMFI")
 
 # =====================================================================
 # App Config
@@ -146,7 +152,7 @@ FUND_MAP = [
     }
 ]
 
-DEEP_DIVE_KEYWORDS = {"portfolio", "holdings", "performance", "returns", "cagr", "managers", "deep dive", "components"}
+DEEP_DIVE_KEYWORDS = {"portfolio", "holdings", "performance", "returns", "cagr", "managers", "deep dive", "components", "allocation"}
 
 # Scheme summary facts from scheme_data.json (no API needed)
 SCHEME_FACTS = {
@@ -345,8 +351,22 @@ def process_query(query):
         return
 
     fund = detect_fund(q)
+
+    # General MF question (no specific fund mentioned) → try FAQ first
     if not fund:
-        st.info("This assistant covers SBI Large Cap, SBI Flexicap, SBI ELSS Tax Saver, and SBI Nifty Index Fund only.")
+        faqs = load_faq()
+        best_score, best_match = 0, None
+        for faq in faqs:
+            score = sum(1 for kw in faq["keywords"] if kw in q)
+            if score > best_score:
+                best_score, best_match = score, faq
+        if best_match and best_score >= 1:
+            render_fact(best_match["answer"], best_match["source"], best_match["scheme"])
+            return
+        st.info(
+            "👋 I specialise in **SBI Mutual Funds**. Mention a fund name (Flexicap, Large Cap, ELSS, Nifty) "
+            "or ask a general MF question like: *What is SIP? What is CAGR? SIP vs Lumpsum?*"
+        )
         return
 
     # Deep Dive (no API key needed)
@@ -372,17 +392,21 @@ def process_query(query):
 # Quick Chips UI
 # =====================================================================
 st.markdown("**Quick Questions:**")
-col1, col2, col3, col4 = st.columns(4)
-chip_queries = {
-    "Flexicap Portfolio": "What are the portfolio holdings for SBI Flexicap?",
-    "Large Cap Holdings": "What are the top holdings for SBI Large Cap?",
-    "ELSS Returns?": "What is the performance of SBI ELSS Tax Saver?",
-    "ELSS Lock-in?": "What is the lock-in period for SBI ELSS Tax Saver Fund?"
-}
-chips = {col1: "Flexicap Portfolio", col2: "Large Cap Holdings", col3: "ELSS Returns?", col4: "ELSS Lock-in?"}
-for col, label in chips.items():
-    if col.button(label, use_container_width=True):
-        st.session_state["query"] = chip_queries[label]
+chip_queries = [
+    ("📈 Flexicap Portfolio", "What are the portfolio holdings for SBI Flexicap?"),
+    ("🏦 Large Cap Holdings", "What are the top holdings for SBI Large Cap?"),
+    ("📊 ELSS Returns", "What is the performance of SBI ELSS Tax Saver?"),
+    ("🔒 ELSS Lock-in", "What is the lock-in period for SBI ELSS Tax Saver Fund?"),
+    ("💰 Expense Ratios", "What is the expense ratio of SBI Nifty Index Fund?"),
+    ("🧑‍💼 Fund Manager", "Who is the fund manager of SBI Flexicap?"),
+    ("💡 SIP vs Lumpsum", "SIP vs Lumpsum which is better?"),
+    ("📋 Section 80C", "How does ELSS help save tax under Section 80C?"),
+]
+cols = st.columns(4)
+for i, (label, query_text) in enumerate(chip_queries):
+    with cols[i % 4]:
+        if st.button(label, use_container_width=True, key=f"chip_{i}"):
+            st.session_state["query"] = query_text
 
 # Search Input
 query = st.text_input(
