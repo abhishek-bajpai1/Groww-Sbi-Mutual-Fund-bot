@@ -2,36 +2,55 @@ import streamlit as st
 import json
 import os
 import sys
+import pandas as pd
+import plotly.express as px
+import requests
+from datetime import datetime
 
 # =====================================================================
 # CRITICAL: Read API key from Streamlit Secrets and inject into os.environ
 # This must happen at module level, before any LangChain imports.
 # =====================================================================
 def _resolve_api_key():
-    """Read GOOGLE_API_KEY from st.secrets or os.environ (checks all casing variants)."""
+    """Read API keys from st.secrets or os.environ."""
     try:
-        key = (
+        # Gemini/Google Keys
+        google_key = (
             st.secrets.get("GOOGLE_API_KEY") or
-            st.secrets.get("google_api_key") or      # ← lowercase (user's value)
+            st.secrets.get("google_api_key") or
             st.secrets.get("GEMINI_API_KEY") or
             st.secrets.get("gemini_api_key") or
             ""
         )
-        if key:
-            os.environ["GOOGLE_API_KEY"] = key
-            os.environ["GEMINI_API_KEY"] = key
-            return key
+        if google_key:
+            os.environ["GOOGLE_API_KEY"] = google_key
+            os.environ["GEMINI_API_KEY"] = google_key
+
+        # Groq Key
+        groq_key = (
+            st.secrets.get("GROQ_API_KEY") or
+            st.secrets.get("groq_api_key") or
+            ""
+        )
+        if groq_key:
+            os.environ["GROQ_API_KEY"] = groq_key
+        
+        return google_key, groq_key
     except Exception:
         pass
+    
     # Local dev fallback
     try:
         from dotenv import load_dotenv
         load_dotenv()
     except Exception:
         pass
-    return os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY") or ""
+    
+    google_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY") or ""
+    groq_key = os.environ.get("GROQ_API_KEY") or ""
+    return google_key, groq_key
 
-GOOGLE_API_KEY = _resolve_api_key()
+GOOGLE_API_KEY, GROQ_API_KEY = _resolve_api_key()
 
 # =====================================================================
 # Sidebar: API Key Diagnostics
@@ -294,29 +313,66 @@ FUND_MAP = [
         "keywords": ["flexicap", "flexi cap"],
         "file": "data/processed/sbi_flexicap_details.json",
         "name": "SBI Flexicap Fund",
-        "url": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39"
+        "url": "https://www.sbimf.com/sbimf-scheme-details/sbi-flexicap-fund-39",
+        "scheme_code": 119718
     },
     {
         "keywords": ["large cap", "bluechip", "largecap"],
         "file": "data/processed/sbi_large_cap_details.json",
         "name": "SBI Large Cap Fund",
-        "url": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43"
+        "url": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+        "scheme_code": 119598
     },
     {
         "keywords": ["elss", "tax saver", "long term equity"],
         "file": "data/processed/sbi_elss_details.json",
         "name": "SBI ELSS Tax Saver Fund",
-        "url": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3"
+        "url": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+        "scheme_code": 119723
     },
     {
         "keywords": ["nifty", "index fund", "nifty index"],
         "file": "data/processed/sbi_nifty_index_details.json",
         "name": "SBI Nifty Index Fund",
-        "url": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13"
+        "url": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+        "scheme_code": 119827
     }
 ]
 
-DEEP_DIVE_KEYWORDS = {"portfolio", "holdings", "performance", "returns", "cagr", "managers", "deep dive", "components", "allocation"}
+DEEP_DIVE_KEYWORDS = {"portfolio", "holdings", "performance", "returns", "cagr", "managers", "deep dive", "components", "allocation", "chart", "nav", "price"}
+
+@st.cache_data(ttl=3600)
+def get_nav_data(scheme_code):
+    """Fetch NAV data from mfapi.in."""
+    try:
+        url = f"https://api.mfapi.in/mf/{scheme_code}"
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        if data.get("status") == "SUCCESS":
+            df = pd.DataFrame(data["data"])
+            df["nav"] = pd.to_numeric(df["nav"])
+            df["date"] = pd.to_datetime(df["date"], format="%d-%m-%Y")
+            df = df.sort_values("date")
+            return df, data["meta"]
+    except Exception as e:
+        st.error(f"Error fetching NAV: {e}")
+    return None, None
+
+def render_performance_chart(df, fund_name):
+    """Render Plotly performance chart."""
+    fig = px.line(df, x="date", y="nav", title=f"{fund_name} - NAV History")
+    fig.update_layout(
+        xaxis_title="Date",
+        yaxis_title="NAV (₹)",
+        hovermode="x unified",
+        margin=dict(l=0, r=0, t=40, b=0),
+        height=350,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color="#7c7e8c" if st.session_state.get("dark_mode") else "#44475b")
+    )
+    fig.update_traces(line_color="#00d09c")
+    st.plotly_chart(fig, use_container_width=True)
 
 # Scheme summary facts from scheme_data.json (no API needed)
 SCHEME_FACTS = {
@@ -398,6 +454,23 @@ def get_fact_answer(query, fund_name):
     return None, url
 
 def render_deep_dive(fund_data, fund_info):
+    # Fetch Live NAV data
+    nav_df, meta = get_nav_data(fund_info["scheme_code"])
+    
+    current_nav = "N/A"
+    nav_date = "N/A"
+    one_day_change = "N/A"
+    
+    if nav_df is not None and not nav_df.empty:
+        latest = nav_df.iloc[-1]
+        current_nav = f"₹{latest['nav']:.2f}"
+        nav_date = latest['date'].strftime("%d %b %Y")
+        
+        if len(nav_df) > 1:
+            prev = nav_df.iloc[-2]
+            change = ((latest['nav'] - prev['nav']) / prev['nav']) * 100
+            one_day_change = f"{'+' if change > 0 else ''}{change:.2f}%"
+
     perf = fund_data.get("performance", {}).get("regular_growth", {}).get("cagr", {})
     holdings = fund_data.get("portfolio", {}).get("top_holdings", [])
 
@@ -419,13 +492,29 @@ def render_deep_dive(fund_data, fund_info):
 
     st.markdown(f"""
     <div class="fact-card">
-        <div class="fact-badge">✓ Official Fact — Deep Dive</div>
-        <div class="fact-text">Detailed data for <strong>{fund_info["name"]}</strong> from official fact sheet.</div>
+        <div class="fact-badge">✓ Official Fact & Live NAV</div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px;">
+            <div>
+                <div style="font-size:24px; font-weight:800; color:var(--heading);">{current_nav}</div>
+                <div style="font-size:12px; color:var(--muted);">Latest NAV ({nav_date})</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:16px; font-weight:700; color:{'#00d09c' if '+' in one_day_change else '#ff4b4b'};">{one_day_change}</div>
+                <div style="font-size:12px; color:var(--muted);">Day Change</div>
+            </div>
+        </div>
+        <div class="fact-text">Detailed data for <strong>{fund_info["name"]}</strong>.</div>
         {perf_html}
+    """, unsafe_allow_html=True)
+    
+    if nav_df is not None:
+        render_performance_chart(nav_df, fund_info["name"])
+        
+    st.markdown(f"""
         {holdings_html}
         <div class="meta-row">
             <div><div class="meta-label">Scheme</div><div class="meta-value">{fund_info["name"]}</div></div>
-            <div><div class="meta-label">Source</div><div class="meta-value">Official Disclosure</div></div>
+            <div><div class="meta-label">Category</div><div class="meta-value">{fund_data.get("category", "N/A")}</div></div>
         </div>
         <a href="{fund_info["url"]}" target="_blank" class="source-link">↗ View official scheme document</a>
     </div>
@@ -485,16 +574,37 @@ def faq_answer(query, fund_name, url):
     match = best_faq_match(query)
     if match:
         render_fact(match["answer"], match["source"], match["scheme"])
-    else:
-        suggestions = [
-            "expense ratio", "exit load", "portfolio", "performance",
-            "fund manager", "benchmark", "SIP amount", "tax", "NAV", "AUM"
-        ]
-        st.info(
-            f"ℹ️ I don't have that specific info. Try asking: " +
-            " · ".join(f"*{s}*" for s in suggestions[:6]) +
-            f"\n\n[Official SBI MF →]({url})"
+        return True
+    return False
+
+def get_groq_answer(query):
+    """Fallback LLM answer using Groq (Llama 3)."""
+    if not GROQ_API_KEY:
+        return None
+    
+    try:
+        from groq import Groq
+        client = Groq(api_key=GROQ_API_KEY)
+        
+        system_prompt = """You are a helpful, factual assistant for Groww Mutual Funds. 
+        Your goal is to answer user queries about mutual funds as accurately as possible based on general financial knowledge.
+        If you are unsure about a specific SBI fund detail, state that you are providing general information and suggest checking the official website.
+        Be concise and use professional language. Format your response clearly with markdown.
+        NEVER provide investment advice or specific 'buy/sell' recommendations."""
+        
+        completion = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": query}
+            ],
+            temperature=0.2,
+            max_tokens=512
         )
+        return completion.choices[0].message.content
+    except Exception as e:
+        st.error(f"Groq API Error: {e}")
+        return None
 
 def render_comparison_table():
     """Render a side-by-side comparison of all 4 funds."""
@@ -579,7 +689,28 @@ def process_query(query):
         return
 
     # FAQ keyword-based lookup (no API needed)
-    faq_answer(q, fund["name"], fund["url"])
+    if faq_answer(q, fund["name"], fund["url"]):
+        return
+
+    # Final Fallback: Groq LLM
+    with st.spinner("🤖 Consulting Groww AI (Groq)..."):
+        llm_answer = get_groq_answer(q)
+        if llm_answer:
+            st.markdown(f"""
+            <div class="fact-card">
+                <div class="fact-badge">✨ AI Assistant (Groq)</div>
+                <div class="fact-text">{llm_answer}</div>
+                <div class="meta-row">
+                    <div><div class="meta-label">Model</div><div class="meta-value">Llama 3 (via Groq)</div></div>
+                    <div><div class="meta-label">Disclaimer</div><div class="meta-value">AI generated response</div></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.info(
+                f"ℹ️ I don't have specific information about that query in my knowledge base. "
+                f"Please visit the [official SBI MF website]({fund['url']}) for detailed information."
+            )
 
 # =====================================================================
 # Quick Chips UI
