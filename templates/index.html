@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groww | MF Facts Assistant</title>
+    <!-- Modern Font Family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Premium Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="16" fill="#00D09C" />
+                <path d="M10 16L14 20L22 12" stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span class="logo-text">Groww</span>
+        </div>
+        <div style="font-weight:600; font-size: 14px; opacity: 0.8;">MF Facts Pro</div>
+    </header>
+
+    <div class="main-wrapper">
+        <section class="hero">
+            <h1>Expert Factual Assistant</h1>
+            <p>Get instant, verified data on SBI Mutual Fund schemes. Sourced directly from official disclosures,
+                updated Jan 2025.</p>
+        </section>
+
+        <div class="search-card">
+            <div class="input-container">
+                <input type="text" id="user-query" placeholder="Ask about expense ratio, exit load, or SIP limits..."
+                    focus>
+                <button class="search-btn" id="ask-btn">
+                    <span id="label">Search</span>
+                    <div class="lds-ring" id="loader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="chips">
+                <div class="chip" onclick="quickAsk('Expense ratio of SBI Large Cap Fund?')">Large Cap ER?</div>
+                <div class="chip" onclick="quickAsk('What is the exit load for SBI Flexicap?')">Flexicap Exit Load?
+                </div>
+                <div class="chip" onclick="quickAsk('What are the portfolio holdings for SBI Flexicap?')">Flexicap
+                    Portfolio</div>
+                <div class="chip" onclick="quickAsk('What are the top holdings for SBI Large Cap?')">Large Cap Holdings
+                </div>
+                <div class="chip" onclick="quickAsk('What is the performance of SBI ELSS Tax Saver?')">ELSS Returns?
+                </div>
+                <div class="chip" onclick="quickAsk('Lock-in period for SBI Long Term Equity?')">ELSS Lock-in?</div>
+            </div>
+        </div>
+
+        <div class="result-area" id="result-area">
+            <div class="result-card">
+                <div class="result-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Official Fact
+                </div>
+                <div class="result-content" id="result-text"></div>
+
+                <div id="deep-dive-container" style="display: none;"></div>
+
+                <div class="meta-grid" id="meta-grid" style="display: none;">
+                    <div class="meta-item">
+                        <span class="meta-label">Scheme Name</span>
+                        <span class="meta-value" id="meta-scheme">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Information Source</span>
+                        <span class="meta-value" id="meta-source">Official Disclosure</span>
+                    </div>
+                </div>
+
+                <a href="#" id="source-link" class="external-link" target="_blank" style="display: none;">
+                    View official scheme document
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            Built with integrity for Groww users. All facts sourced from <a href="https://www.sbimf.com/"
+                target="_blank">SBI Mutual Fund Official</a>, SEBI, and AMFI.
+            <br><br>
+            <b>Non-Advisory Disclaimer:</b> This system is strictly for informational purposes and does not constitute
+            financial advice or investment recommendations.
+        </footer>
+    </div>
+
+    <script>
+        const queryInput = document.getElementById('user-query');
+        const askBtn = document.getElementById('ask-btn');
+        const btnLabel = document.getElementById('label');
+        const loader = document.getElementById('loader');
+        const resultArea = document.getElementById('result-area');
+        const resultText = document.getElementById('result-text');
+
+        const metaGrid = document.getElementById('meta-grid');
+        const metaScheme = document.getElementById('meta-scheme');
+        const sourceLink = document.getElementById('source-link');
+
+        async function handleSearch(query) {
+            if (!query.trim()) return;
+
+            // Loading state
+            askBtn.disabled = true;
+            btnLabel.style.display = 'none';
+            loader.style.display = 'inline-block';
+            resultArea.style.opacity = '0.4';
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+
+                const data = await response.json();
+
+                if (data.answer) {
+                    resultText.innerText = data.answer;
+
+                    // Populate Metadata
+                    if (data.scheme && data.scheme !== "N/A") {
+                        metaScheme.innerText = data.scheme;
+                        metaGrid.style.display = 'grid';
+                    } else {
+                        metaGrid.style.display = 'none';
+                    }
+
+                    // Deep Dive Content Rendering
+                    if (data.structured_data) {
+                        const sd = data.structured_data;
+                        let html = '';
+
+                        if (sd.performance && sd.performance.regular_growth && sd.performance.regular_growth.cagr) {
+                            html += `<div class="deep-dive-title">Performance (CAGR)</div><div class="perf-grid">`;
+                            const cagr = sd.performance.regular_growth.cagr;
+                            for (const [period, val] of Object.entries(cagr)) {
+                                let pLabel = period.replace('_', ' ').toUpperCase();
+                                if (pLabel === 'SINCE INCEPTION') pLabel = 'ALL TIME';
+                                html += `<div class="perf-box"><div class="perf-period">${pLabel}</div><div class="perf-val">${val}</div></div>`;
+                            }
+                            html += `</div>`;
+                        }
+
+                        if (sd.portfolio && sd.portfolio.top_holdings) {
+                            html += `<div class="deep-dive-title">Top Holdings</div><table class="data-table"><tr><th>Company</th><th>Allocation</th></tr>`;
+                            sd.portfolio.top_holdings.slice(0, 5).forEach(h => {
+                                html += `<tr><td>${h.name}</td><td><strong>${h.percentage}</strong></td></tr>`;
+                            });
+                            html += `</table>`;
+                        }
+
+                        document.getElementById('deep-dive-container').innerHTML = html;
+                        document.getElementById('deep-dive-container').style.display = 'block';
+                    } else {
+                        document.getElementById('deep-dive-container').style.display = 'none';
+                    }
+
+                    if (data.source && data.source !== "N/A") {
+                        sourceLink.href = data.source;
+                        sourceLink.style.display = 'inline-flex';
+                    } else {
+                        sourceLink.style.display = 'none';
+                    }
+
+                    resultArea.style.display = 'block';
+                    resultArea.style.opacity = '1';
+                    // Smooth scroll to result
+                    resultArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+            } catch (err) {
+                resultText.innerText = "Error: Unable to connect to backend.";
+                resultArea.style.display = 'block';
+                resultArea.style.opacity = '1';
+            } finally {
+                askBtn.disabled = false;
+                btnLabel.style.display = 'inline';
+                loader.style.display = 'none';
+            }
+        }
+
+        askBtn.addEventListener('click', () => handleSearch(queryInput.value));
+        queryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch(queryInput.value);
+        });
+
+        function quickAsk(text) {
+            queryInput.value = text;
+            handleSearch(text);
+        }
+    </script>
+</body>
+
+</html>

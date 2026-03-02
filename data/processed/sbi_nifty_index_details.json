@@ -1,0 +1,52 @@
+{
+    "scheme_name": "SBI Nifty Index Fund",
+    "scheme_summary": "An open-ended scheme replicating/tracking Nifty 50 Index.",
+    "aum": {
+        "amount": 10000,
+        "unit": "Cr",
+        "as_on": "Jan 2025"
+    },
+    "nav": {
+        "value": 185.70,
+        "as_on": "Jan 2025"
+    },
+    "performance": {
+        "regular_growth": {
+            "cagr": {
+                "1y": "21.5%",
+                "3y": "15.8%",
+                "5y": "14.2%",
+                "10y": "13.1%",
+                "since_inception": "12.8%"
+            }
+        }
+    },
+    "portfolio": {
+        "top_holdings": [
+            {
+                "name": "HDFC BANK LTD.",
+                "percentage": "11.50%"
+            },
+            {
+                "name": "RELIANCE INDUSTRIES LTD.",
+                "percentage": "9.80%"
+            },
+            {
+                "name": "ICICI BANK LTD.",
+                "percentage": "7.90%"
+            },
+            {
+                "name": "INFOSYS LTD.",
+                "percentage": "5.80%"
+            },
+            {
+                "name": "ITC LTD.",
+                "percentage": "4.50%"
+            }
+        ]
+    },
+    "quantitative_data": {
+        "expense_ratio_regular": "0.40%",
+        "expense_ratio_direct": "0.19%"
+    }
+}

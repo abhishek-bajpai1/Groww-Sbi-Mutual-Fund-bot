@@ -1,0 +1,52 @@
+{
+    "scheme_name": "SBI ELSS Tax Saver Fund",
+    "scheme_summary": "An open-ended equity linked saving scheme with a statutory lock in of 3 years and tax benefit.",
+    "aum": {
+        "amount": 25000,
+        "unit": "Cr",
+        "as_on": "Jan 2025"
+    },
+    "nav": {
+        "value": 310.20,
+        "as_on": "Jan 2025"
+    },
+    "performance": {
+        "regular_growth": {
+            "cagr": {
+                "1y": "18.5%",
+                "3y": "16.2%",
+                "5y": "15.8%",
+                "10y": "14.9%",
+                "since_inception": "15.5%"
+            }
+        }
+    },
+    "portfolio": {
+        "top_holdings": [
+            {
+                "name": "ICICI BANK LTD.",
+                "percentage": "8.50%"
+            },
+            {
+                "name": "HDFC BANK LTD.",
+                "percentage": "7.20%"
+            },
+            {
+                "name": "RELIANCE INDUSTRIES LTD.",
+                "percentage": "6.80%"
+            },
+            {
+                "name": "INFOSYS LTD.",
+                "percentage": "5.10%"
+            },
+            {
+                "name": "AXIS BANK LTD.",
+                "percentage": "4.50%"
+            }
+        ]
+    },
+    "quantitative_data": {
+        "expense_ratio_regular": "1.57%",
+        "expense_ratio_direct": "0.89%"
+    }
+}

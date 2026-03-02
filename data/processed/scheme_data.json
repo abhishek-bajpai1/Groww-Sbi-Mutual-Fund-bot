@@ -1,0 +1,51 @@
+[
+  {
+    "scheme_name": "SBI Large Cap Fund",
+    "ticker": "SBILC",
+    "expense_ratio": {
+      "regular": "1.48%",
+      "direct": "0.80%"
+    },
+    "exit_load": "0.25% if redeemed within 30 days; 0.10% if redeemed between 30–90 days; Nil after 90 days.",
+    "category": "Equity: Large Cap",
+    "aum": "Approx ₹35,000+ Crores",
+    "source_url": "https://www.sbimf.com/sbimf-scheme-details/SBI-Large-Cap-Fund-(Formerly-known-as-SBI-Bluechip-Fund)-43",
+    "last_updated": "Jan 2025"
+  },
+  {
+    "scheme_name": "SBI Flexicap Fund",
+    "ticker": "SBIFC",
+    "expense_ratio": {
+      "regular": "1.66%",
+      "direct": "0.83%"
+    },
+    "exit_load": "0.10% if redeemed on or before 30 days; Nil after 30 days.",
+    "category": "Equity: Flexi Cap",
+    "source_url": "https://www.sbimf.com/sbimf-scheme-details/SBI-Flexicap-Fund-39",
+    "last_updated": "Jan 2025"
+  },
+  {
+    "scheme_name": "SBI ELSS Tax Saver Fund",
+    "ticker": "SBIELSS",
+    "expense_ratio": {
+      "regular": "1.57%",
+      "direct": "0.89%"
+    },
+    "exit_load": "Nil (Statutory lock-in period of 3 years applies).",
+    "category": "Equity: ELSS",
+    "source_url": "https://www.sbimf.com/sbimf-scheme-details/SBI-ELSS-Tax-Saver-Fund-(formerly-known-as-SBI-Long-Term-Equity-Fund)-3",
+    "last_updated": "Jan 2025"
+  },
+  {
+    "scheme_name": "SBI Nifty Index Fund",
+    "ticker": "SBINIF",
+    "expense_ratio": {
+      "regular": "0.40%",
+      "direct": "0.19%"
+    },
+    "exit_load": "0.20% if redeemed within 15 days; Nil after 15 days.",
+    "category": "Index Fund",
+    "source_url": "https://www.sbimf.com/sbimf-scheme-details/sbi-nifty-index-fund-13",
+    "last_updated": "Jan 2025"
+  }
+]

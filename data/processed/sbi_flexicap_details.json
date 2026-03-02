@@ -1,0 +1,172 @@
+{
+    "scheme_name": "SBI Flexicap Fund",
+    "scheme_summary": "An open-ended dynamic equity scheme investing across large cap, mid cap, small cap stocks.",
+    "aum": {
+        "amount": 23147.51,
+        "unit": "Cr",
+        "as_on": "31 Jan 2026"
+    },
+    "nav": {
+        "value": 109.9055,
+        "as_on": "28 Feb 2026"
+    },
+    "allotment_date": "29 Sep 2005",
+    "benchmark": "BSE 500 TRI",
+    "additional_benchmark": "BSE Sensex TRI",
+    "investment_details": {
+        "min_lumpsum": 1000,
+        "min_add_lumpsum": 1000,
+        "min_sip": 500
+    },
+    "performance": {
+        "regular_growth": {
+            "cagr": {
+                "1y": "4.9%",
+                "3y": "13.63%",
+                "5y": "13.49%",
+                "10y": "13.18%",
+                "since_inception": "12.48%"
+            },
+            "current_value_10k": {
+                "1y": 10490,
+                "3y": 14678,
+                "5y": 18846,
+                "10y": 34549,
+                "since_inception": 109591
+            }
+        },
+        "direct_growth": {
+            "cagr": {
+                "1y": "5.76%",
+                "3y": "14.59%",
+                "5y": "14.49%",
+                "10y": "14.27%",
+                "since_inception": "15.33%"
+            },
+            "current_value_10k": {
+                "1y": 10576,
+                "3y": 15053,
+                "5y": 19692,
+                "10y": 38026,
+                "since_inception": 64640
+            }
+        }
+    },
+    "portfolio": {
+        "top_holdings": [
+            {
+                "name": "INFOSYS LTD.",
+                "percentage": "6.38%"
+            },
+            {
+                "name": "HDFC BANK LTD.",
+                "percentage": "6%"
+            },
+            {
+                "name": "ICICI BANK LTD.",
+                "percentage": "5.82%"
+            },
+            {
+                "name": "AXIS BANK LTD.",
+                "percentage": "5.14%"
+            },
+            {
+                "name": "LARSEN & TOUBRO LTD.",
+                "percentage": "4.41%"
+            },
+            {
+                "name": "CASH, CASH EQUIVALENTS AND OTHERS",
+                "percentage": "4.1%"
+            },
+            {
+                "name": "BHARTI AIRTEL LTD.",
+                "percentage": "3.8%"
+            },
+            {
+                "name": "MARUTI SUZUKI INDIA LTD.",
+                "percentage": "3.8%"
+            },
+            {
+                "name": "KOTAK MAHINDRA BANK LTD.",
+                "percentage": "3.53%"
+            },
+            {
+                "name": "TATA STEEL LTD.",
+                "percentage": "3.04%"
+            },
+            {
+                "name": "EICHER MOTORS LTD.",
+                "percentage": "3.01%"
+            }
+        ],
+        "sector_allocations": [
+            {
+                "sector": "FINANCIAL SERVICES",
+                "percentage": "36.27%"
+            },
+            {
+                "sector": "AUTOMOBILE AND AUTO COMPONENTS",
+                "percentage": "8.96%"
+            },
+            {
+                "sector": "INFORMATION TECHNOLOGY",
+                "percentage": "8.52%"
+            },
+            {
+                "sector": "METALS & MINING",
+                "percentage": "7.47%"
+            },
+            {
+                "sector": "CAPITAL GOODS",
+                "percentage": "5.76%"
+            },
+            {
+                "sector": "CONSTRUCTION",
+                "percentage": "5.3%"
+            }
+        ]
+    },
+    "quantitative_data": {
+        "expense_ratio_regular": "1.66%",
+        "expense_ratio_direct": "0.83%",
+        "tracking_error_regular": "3.8272%",
+        "sharpe_ratio": 0.71,
+        "standard_deviation": "11.1%",
+        "beta": 0.84
+    },
+    "idcw_history": [
+        {
+            "date": "09 Mar 2018",
+            "idcw": 1.9,
+            "nav": 20.523
+        },
+        {
+            "date": "29 Dec 2017",
+            "idcw": 2.5,
+            "nav": 23.8257
+        },
+        {
+            "date": "30 Dec 2016",
+            "idcw": 1.9,
+            "nav": 19.2173
+        },
+        {
+            "date": "20 Nov 2015",
+            "idcw": 2.9,
+            "nav": 19.2712
+        }
+    ],
+    "fund_managers": [
+        {
+            "name": "Mr. Dinesh Balachandran",
+            "experience": "22 years",
+            "managing_since": "Dec 2024"
+        },
+        {
+            "name": "Mr. Anup Upadhyay",
+            "experience": "14 years",
+            "managing_since": "Dec 2024"
+        }
+    ],
+    "riskometer": "Very High"
+}
