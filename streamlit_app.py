@@ -4,14 +4,22 @@ import os
 import sys
 
 # --- CRITICAL: Inject secrets into env BEFORE importing any LangChain/Gemini modules ---
-# On Streamlit Cloud, secrets come from st.secrets (set in app dashboard), not .env files.
+# On Streamlit Cloud, secrets come from st.secrets NOT from .env files.
+# langchain-google-genai checks for both GOOGLE_API_KEY and GEMINI_API_KEY.
 try:
-    if "GOOGLE_API_KEY" in st.secrets:
-        os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+    # Try all common secret names the user might have set in Streamlit Secrets UI
+    api_key = (
+        st.secrets.get("GOOGLE_API_KEY") or
+        st.secrets.get("GEMINI_API_KEY") or
+        None
+    )
+    if api_key:
+        os.environ["GOOGLE_API_KEY"] = api_key
+        os.environ["GEMINI_API_KEY"] = api_key
 except Exception:
-    pass  # Local dev: fall back to .env
+    pass  # Local dev: fall back to .env below
 
-# Now safe to load dotenv for local development
+# Load .env for local development (no-op on Streamlit Cloud)
 try:
     from dotenv import load_dotenv
     load_dotenv()
