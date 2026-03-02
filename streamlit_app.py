@@ -280,6 +280,8 @@ def render_fact(answer, url, scheme):
     </div>
     """, unsafe_allow_html=True)
 
+import re
+
 @st.cache_data
 def load_faq():
     """Load the comprehensive FAQ database from JSON."""
@@ -289,47 +291,68 @@ def load_faq():
     except Exception:
         return []
 
-def faq_answer(query, fund_name, url):
-    """Match query against FAQ database using keyword scoring."""
-    q = query.lower()
+def normalize(text):
+    """Lowercase + strip punctuation for better keyword matching."""
+    return re.sub(r'[^\w\s]', '', text.lower()).strip()
+
+def faq_score(faq, q_norm):
+    """Score a FAQ entry against a normalized query."""
+    score = 0
+    for kw in faq["keywords"]:
+        kw_norm = normalize(kw)
+        if kw_norm in q_norm:
+            # Longer keyword matches are worth more
+            score += 1 + len(kw_norm.split())
+    return score
+
+def best_faq_match(q_raw):
+    """Find the best FAQ match using normalized keyword scoring."""
+    q_norm = normalize(q_raw)
     faqs = load_faq()
-    
-    # Identify which fund keywords appear in the query
-    fund_keywords = []
-    q_lower = q
-    for fund in FUND_MAP:
-        if any(kw in q_lower for kw in fund["keywords"]):
-            fund_keywords = fund["keywords"]
-            break
-
-    best_score = 0
-    best_match = None
-
+    best_score, best_match = 0, None
     for faq in faqs:
-        # Score: count how many FAQ keywords appear in query
-        score = sum(1 for kw in faq["keywords"] if kw in q)
-        if score == 0:
-            continue
-        
-        # Boost score if fund matches
-        faq_funds = [f.lower() for f in faq.get("funds", [])]
-        fund_matches = any(kw in q for kw in faq_funds)
-        if fund_matches:
-            score += 2
+        s = faq_score(faq, q_norm)
+        if s > best_score:
+            best_score, best_match = s, faq
+    return best_match if best_score >= 2 else None
 
-        if score > best_score:
-            best_score = score
-            best_match = faq
-
-    if best_match and best_score >= 1:
-        render_fact(best_match["answer"], best_match["source"], best_match["scheme"])
+def faq_answer(query, fund_name, url):
+    """Match query against FAQ database using normalized keyword scoring."""
+    match = best_faq_match(query)
+    if match:
+        render_fact(match["answer"], match["source"], match["scheme"])
     else:
+        suggestions = [
+            "expense ratio", "exit load", "portfolio", "performance",
+            "fund manager", "benchmark", "SIP amount", "tax", "NAV", "AUM"
+        ]
         st.info(
-            f"ℹ️ I don't have specific information about that query in my knowledge base. "
-            f"Please visit the [official SBI MF website]({url}) for detailed information, "
-            f"or ask about: expense ratio, exit load, portfolio, performance, fund manager, "
-            f"benchmark, SIP amount, tax, NAV, AUM, or redemption."
+            f"ℹ️ I don't have that specific info. Try asking: " +
+            " · ".join(f"*{s}*" for s in suggestions[:6]) +
+            f"\n\n[Official SBI MF →]({url})"
         )
+
+def render_comparison_table():
+    """Render a side-by-side comparison of all 4 funds."""
+    st.markdown("""
+    <div class="fact-card">
+        <div class="fact-badge">✓ Official Data — Fund Comparison</div>
+        <div class="fact-text"><strong>All SBI MF Funds — Side-by-Side</strong></div>
+        <table class="holdings-table" style="margin-top:14px;">
+            <tr><th>Feature</th><th>🔵 Flexicap</th><th>🟢 Large Cap</th><th>🟡 ELSS</th><th>🟣 Nifty Index</th></tr>
+            <tr><td>Category</td><td>Flexi Cap</td><td>Large Cap</td><td>ELSS</td><td>Index Fund</td></tr>
+            <tr><td>TER (Direct)</td><td><strong>0.83%</strong></td><td><strong>0.80%</strong></td><td><strong>0.89%</strong></td><td><strong>0.19%</strong></td></tr>
+            <tr><td>TER (Regular)</td><td>1.66%</td><td>1.48%</td><td>1.57%</td><td>0.40%</td></tr>
+            <tr><td>Lock-in</td><td>None</td><td>None</td><td><strong>3 Years</strong></td><td>None</td></tr>
+            <tr><td>Exit Load</td><td>0.10%/30d</td><td>0.25%/30d</td><td>Nil</td><td>0.20%/15d</td></tr>
+            <tr><td>Tax Saving</td><td>No</td><td>No</td><td><strong>80C ✓</strong></td><td>No</td></tr>
+            <tr><td>Min SIP</td><td>₹500</td><td>₹500</td><td>₹500</td><td>₹500</td></tr>
+            <tr><td>Risk</td><td>Very High</td><td>Very High</td><td>Very High</td><td>Very High</td></tr>
+            <tr><td>Benchmark</td><td>Nifty 500 TRI</td><td>Nifty 100 TRI</td><td>Nifty 500 TRI</td><td>Nifty 50 TRI</td></tr>
+        </table>
+        <a href="https://www.sbimf.com/" target="_blank" class="source-link">↗ View at SBI MF Official</a>
+    </div>
+    """, unsafe_allow_html=True)
 
 # =====================================================================
 # Main processing
@@ -350,22 +373,28 @@ def process_query(query):
         """, unsafe_allow_html=True)
         return
 
+    # Special feature: Fund Comparison Table
+    q_norm = normalize(q)
+    if any(kw in q_norm for kw in ["compare", "comparison", "all funds", "vs", "difference between"]):
+        render_comparison_table()
+        return
+
+    # Special feature: SIP Calculator
+    if any(kw in q_norm for kw in ["sip calculator", "calculate sip", "how much will i get", "sip returns calculator", "calculate return"]):
+        render_sip_calculator()
+        return
+
     fund = detect_fund(q)
 
     # General MF question (no specific fund mentioned) → try FAQ first
     if not fund:
-        faqs = load_faq()
-        best_score, best_match = 0, None
-        for faq in faqs:
-            score = sum(1 for kw in faq["keywords"] if kw in q)
-            if score > best_score:
-                best_score, best_match = score, faq
-        if best_match and best_score >= 1:
-            render_fact(best_match["answer"], best_match["source"], best_match["scheme"])
+        match = best_faq_match(q)
+        if match:
+            render_fact(match["answer"], match["source"], match["scheme"])
             return
         st.info(
             "👋 I specialise in **SBI Mutual Funds**. Mention a fund name (Flexicap, Large Cap, ELSS, Nifty) "
-            "or ask a general MF question like: *What is SIP? What is CAGR? SIP vs Lumpsum?*"
+            "or ask a general MF question like: *What is SIP? What is CAGR? SIP vs Lumpsum? Direct vs Regular?*"
         )
         return
 
@@ -399,14 +428,42 @@ chip_queries = [
     ("🔒 ELSS Lock-in", "What is the lock-in period for SBI ELSS Tax Saver Fund?"),
     ("💰 Expense Ratios", "What is the expense ratio of SBI Nifty Index Fund?"),
     ("🧑‍💼 Fund Manager", "Who is the fund manager of SBI Flexicap?"),
-    ("💡 SIP vs Lumpsum", "SIP vs Lumpsum which is better?"),
-    ("📋 Section 80C", "How does ELSS help save tax under Section 80C?"),
+    ("💡 SIP vs Lumpsum", "SIP vs Lumpsum"),
+    ("📋 Section 80C", "How does ELSS save tax under Section 80C?"),
+    ("⚖️ Compare All Funds", "compare all funds"),
+    ("📅 Inception Dates", "What is the inception date of SBI Flexicap?"),
 ]
 cols = st.columns(4)
 for i, (label, query_text) in enumerate(chip_queries):
     with cols[i % 4]:
         if st.button(label, use_container_width=True, key=f"chip_{i}"):
             st.session_state["query"] = query_text
+
+# ─── SIP Calculator (always visible at bottom) ─────────────────────
+with st.expander("🧮 SIP Returns Calculator", expanded=False):
+    st.markdown("Estimate how your SIP grows over time (illustrative, not a guarantee).")
+    calc_cols = st.columns(3)
+    with calc_cols[0]:
+        monthly = st.number_input("Monthly SIP (₹)", min_value=500, max_value=100000, value=5000, step=500)
+    with calc_cols[1]:
+        years = st.slider("Duration (years)", 1, 30, 10)
+    with calc_cols[2]:
+        rate = st.slider("Expected CAGR (%)", 1, 25, 12)
+
+    n = years * 12
+    r = rate / 100 / 12
+    future_value = monthly * ((((1 + r) ** n) - 1) / r) * (1 + r)
+    invested = monthly * n
+    gains = future_value - invested
+
+    res_cols = st.columns(3)
+    with res_cols[0]:
+        st.metric("Total Invested", f"₹{invested/100000:.2f}L")
+    with res_cols[1]:
+        st.metric("Est. Gains", f"₹{gains/100000:.2f}L", delta="Market-linked")
+    with res_cols[2]:
+        st.metric("Est. Corpus", f"₹{future_value/100000:.2f}L")
+    st.caption("⚠️ This is a mathematical projection using compound interest. Actual MF returns are market-linked and not guaranteed.")
 
 # Search Input
 query = st.text_input(
