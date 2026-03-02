@@ -79,45 +79,168 @@ st.set_page_config(
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-.hero-title { font-size: 2.4rem; font-weight: 800; color: #1e2227; text-align: center; letter-spacing: -1px; margin-bottom: 6px; }
-.hero-sub { font-size: 1rem; color: #7c7e8c; text-align: center; margin-bottom: 28px; }
+/* ── CSS Variables: Light (default) ──────────────────────────── */
+:root {
+  --bg:        #f4f7f9;
+  --card-bg:   #ffffff;
+  --text:      #44475b;
+  --heading:   #1e2227;
+  --muted:     #7c7e8c;
+  --border:    #eaebed;
+  --perf-bg:   #f4f7f9;
+  --refusal-bg:#fff8f0;
+  --accent:    #00d09c;
+}
 
-.fact-card { background: #fff; border-left: 6px solid #00d09c; border-radius: 16px; padding: 22px 26px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); margin-top: 20px; }
-.fact-badge { color: #00d09c; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-.fact-text { font-size: 16px; line-height: 1.8; color: #44475b; }
+/* ── Dark Mode Variables ─────────────────────────────────────── */
+body.dark-mode, body.dark-mode [class*="css"] {
+  --bg:        #0f1117;
+  --card-bg:   #1a1d2e;
+  --text:      #c9cdd4;
+  --heading:   #f0f2f6;
+  --muted:     #8b8fa8;
+  --border:    #2d3148;
+  --perf-bg:   #252840;
+  --refusal-bg:#2a1f0f;
+  --accent:    #00d09c;
+}
 
-.perf-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 14px 0; }
-.perf-box { background: #f4f7f9; border: 1px solid #eaebed; border-radius: 12px; padding: 12px 8px; text-align: center; }
-.perf-period { font-size: 10px; color: #7c7e8c; font-weight: 700; text-transform: uppercase; }
-.perf-val { font-size: 17px; font-weight: 700; color: #00d09c; margin-top: 4px; }
+/* ── Base ────────────────────────────────────────────────────── */
+html, body, [class*="css"] {
+  font-family: 'Inter', sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
 
+/* ── Hero ────────────────────────────────────────────────────── */
+.hero-title {
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--heading); text-align: center;
+  letter-spacing: -1px; margin-bottom: 6px;
+}
+.hero-sub {
+  font-size: 1rem; color: var(--muted);
+  text-align: center; margin-bottom: 28px;
+}
+
+/* ── Fact Card ───────────────────────────────────────────────── */
+.fact-card {
+  background: var(--card-bg);
+  border-left: 6px solid var(--accent);
+  border-radius: 16px; padding: 22px 26px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  margin-top: 20px;
+}
+.fact-badge {
+  color: var(--accent); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+}
+.fact-text { font-size: 15px; line-height: 1.8; color: var(--text); }
+
+/* ── Performance Grid ───────────────────────────────────────── */
+.perf-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px; margin: 14px 0;
+}
+.perf-box {
+  background: var(--perf-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 8px; text-align: center;
+}
+.perf-period { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+.perf-val    { font-size: 17px; font-weight: 700; color: var(--accent); margin-top: 4px; }
+
+/* ── Holdings Table ─────────────────────────────────────────── */
 .holdings-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-.holdings-table th { color: #7c7e8c; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 8px 12px; text-align: left; border-bottom: 1px solid #eaebed; }
-.holdings-table td { padding: 10px 12px; border-bottom: 1px solid #eaebed; color: #44475b; }
-.holdings-table td strong { color: #1e2227; }
+.holdings-table th {
+  color: var(--muted); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; padding: 8px 12px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.holdings-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text);
+}
+.holdings-table td strong { color: var(--heading); }
 
-.section-title { font-size: 14px; font-weight: 700; color: #1e2227; margin: 18px 0 8px 0; }
-.meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; padding-top: 14px; border-top: 1px solid #eaebed; }
-.meta-label { font-size: 10px; color: #7c7e8c; font-weight: 700; text-transform: uppercase; }
-.meta-value { font-size: 13px; font-weight: 600; color: #1e2227; margin-top: 2px; }
-.source-link { display: inline-block; color: #00d09c; font-weight: 600; font-size: 13px; text-decoration: none; margin-top: 12px; }
-.refusal-card { background: #fff8f0; border-left: 6px solid #ff9500; border-radius: 16px; padding: 22px 26px; margin-top: 20px; }
-.disclaimer { font-size: 12px; color: #94a3b8; text-align: center; margin-top: 36px; line-height: 1.6; }
+/* ── Meta Row ───────────────────────────────────────────────── */
+.section-title { font-size: 14px; font-weight: 700; color: var(--heading); margin: 18px 0 8px 0; }
+.meta-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
+}
+.meta-label { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+.meta-value { font-size: 13px; font-weight: 600; color: var(--heading); margin-top: 2px; }
+.source-link {
+  display: inline-block; color: var(--accent); font-weight: 600;
+  font-size: 13px; text-decoration: none; margin-top: 12px;
+}
+.refusal-card {
+  background: var(--refusal-bg); border-left: 6px solid #ff9500;
+  border-radius: 16px; padding: 22px 26px; margin-top: 20px;
+}
+.disclaimer {
+  font-size: 12px; color: var(--muted); text-align: center;
+  margin-top: 36px; line-height: 1.6;
+}
+
+/* ── Dark mode toggle button ─────────────────────────────────── */
+.theme-btn {
+  float: right; background: var(--perf-bg); border: 1px solid var(--border);
+  border-radius: 100px; padding: 4px 14px; font-size: 13px;
+  color: var(--text); cursor: pointer; font-weight: 600;
+}
+
+/* ── Mobile Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-title { font-size: 1.6rem !important; }
+  .hero-sub   { font-size: 0.85rem !important; }
+
+  .fact-card  { padding: 16px 16px !important; border-radius: 12px !important; }
+  .fact-text  { font-size: 14px !important; }
+
+  /* Stack perf grid to 3 cols on tablet, 2 on phone */
+  .perf-grid  { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+  .perf-val   { font-size: 14px !important; }
+
+  /* Stack meta-row to single column */
+  .meta-row   { grid-template-columns: 1fr !important; gap: 8px !important; }
+
+  .holdings-table th, .holdings-table td { padding: 6px 8px !important; font-size: 12px !important; }
+
+  /* Make comparison table scroll horizontally */
+  .holdings-table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.3rem !important; }
+  .perf-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+  .fact-card  { padding: 14px 12px !important; }
+}
 </style>
 """, unsafe_allow_html=True)
 
-# Header
-st.markdown("""
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-    <div style="background:#00d09c;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;">
-        <span style="color:white;font-size:18px;font-weight:bold;">✓</span>
+# ── Dark Mode Toggle + Header ────────────────────────────────────────
+if "dark_mode" not in st.session_state:
+    st.session_state["dark_mode"] = False
+
+header_col, toggle_col = st.columns([5, 1])
+with header_col:
+    st.markdown("""
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+        <div style="background:#00d09c;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+            <span style="color:white;font-size:17px;font-weight:bold;">✓</span>
+        </div>
+        <span style="font-size:21px;font-weight:800;color:#00d09c;">Groww</span>
+        <span style="font-size:13px;color:#7c7e8c;font-weight:600;margin-left:4px;">MF Facts Pro</span>
     </div>
-    <span style="font-size:22px;font-weight:800;color:#00d09c;">Groww</span>
-    <span style="margin-left:auto;font-size:13px;color:#7c7e8c;font-weight:600;">MF Facts Pro</span>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+with toggle_col:
+    dark = st.toggle("🌙", value=st.session_state["dark_mode"], key="theme_toggle", help="Dark / Light mode")
+    st.session_state["dark_mode"] = dark
+
+# Inject dark-mode class on body via JS
+dark_js = "document.body.classList.add('dark-mode');" if st.session_state["dark_mode"] else "document.body.classList.remove('dark-mode');"
+st.markdown(f"<script>{dark_js}</script>", unsafe_allow_html=True)
 
 st.markdown('<div class="hero-title">Expert Factual Assistant</div>', unsafe_allow_html=True)
 st.markdown('<div class="hero-sub">Get instant, verified data on SBI Mutual Fund schemes.<br>Sourced directly from official disclosures, updated Jan 2025.</div>', unsafe_allow_html=True)
