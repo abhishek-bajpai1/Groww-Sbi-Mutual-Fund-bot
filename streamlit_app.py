@@ -339,46 +339,44 @@ for i, fund in enumerate(FUND_MAP):
             st.session_state.pending_query = f"Tell me about {fund['full']}"
 
 # =====================================================================
-# Chat Window
+# Chat Window — render each message separately
 # =====================================================================
-chat_html = '<div class="chat-wrap">'
+st.markdown('<div class="chat-wrap">', unsafe_allow_html=True)
 
 if not st.session_state.messages:
-    chat_html += """
+    st.markdown("""
     <div class="welcome-card">
         <div class="welcome-emoji">👋</div>
         <div class="welcome-title">Hi! I'm your SBI MF Expert</div>
         <div class="welcome-sub">Ask me anything about SBI Mutual Fund schemes.<br>
         I can answer questions about performance, portfolio, expense ratio, tax, and more.</div>
     </div>
-    """
+    """, unsafe_allow_html=True)
 else:
     for msg in st.session_state.messages:
         role = msg["role"]
         content = msg["content"]
+        t = msg.get("time", "")
         if role == "user":
-            chat_html += f"""
+            st.markdown(f"""
             <div class="msg-row user">
                 <div class="msg-avatar user">👤</div>
                 <div>
                     <div class="msg-bubble user">{content}</div>
-                    <div class="msg-time" style="text-align:right">{msg.get("time","")}</div>
+                    <div class="msg-time" style="text-align:right">{t}</div>
                 </div>
-            </div>
-            """
+            </div>""", unsafe_allow_html=True)
         else:
-            chat_html += f"""
+            st.markdown(f"""
             <div class="msg-row bot">
                 <div class="msg-avatar bot">🌱</div>
                 <div>
                     <div class="msg-bubble bot">{content}</div>
-                    <div class="msg-time">{msg.get("time","")}</div>
+                    <div class="msg-time">{t}</div>
                 </div>
-            </div>
-            """
+            </div>""", unsafe_allow_html=True)
 
-chat_html += "</div>"
-st.markdown(chat_html, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # =====================================================================
 # Quick Action Grid (only when no messages)
