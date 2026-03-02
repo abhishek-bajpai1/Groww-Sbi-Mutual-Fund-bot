@@ -339,7 +339,24 @@ FUND_MAP = [
     }
 ]
 
-DEEP_DIVE_KEYWORDS = {"portfolio", "holdings", "performance", "returns", "cagr", "managers", "deep dive", "components", "allocation", "chart", "nav", "price"}
+DEEP_DIVE_KEYWORDS = {"portfolio", "holdings", "performance", "returns", "cagr", "managers", "deep dive", "components", "allocation", "chart", "nav", "price", "sector"}
+
+def render_sector_chart(sector_data, fund_name):
+    """Render Plotly pie chart for sector allocation."""
+    df = pd.DataFrame(sector_data)
+    fig = px.pie(df, values='percentage', names='sector', title=f"{fund_name} - Sector Allocation",
+                 color_discrete_sequence=px.colors.qualitative.Pastel)
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+    fig.update_layout(
+        margin=dict(l=0, r=0, t=40, b=0),
+        height=350,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color="#7c7e8c" if st.session_state.get("dark_mode") else "#44475b"),
+        showlegend=False
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 
 @st.cache_data(ttl=3600)
 def get_nav_data(scheme_code):
@@ -486,13 +503,21 @@ def render_deep_dive(fund_data, fund_info):
     holdings_html = ""
     if holdings:
         holdings_html = '<div class="section-title">🏦 Top Holdings</div><table class="holdings-table"><tr><th>Company</th><th>Allocation</th></tr>'
-        for h in holdings[:5]:
+        for h in holdings[:8]:
             holdings_html += f'<tr><td>{h["name"]}</td><td><strong>{h["percentage"]}</strong></td></tr>'
         holdings_html += "</table>"
 
+    # Favorites Logic
+    if "favorites" not in st.session_state:
+        st.session_state["favorites"] = []
+    
+    is_fav = fund_info["name"] in st.session_state["favorites"]
+    
     st.markdown(f"""
     <div class="fact-card">
-        <div class="fact-badge">✓ Official Fact & Live NAV</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="fact-badge">✓ Official Fact & Live NAV</div>
+        </div>
         <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px;">
             <div>
                 <div style="font-size:24px; font-weight:800; color:var(--heading);">{current_nav}</div>
@@ -506,9 +531,21 @@ def render_deep_dive(fund_data, fund_info):
         <div class="fact-text">Detailed data for <strong>{fund_info["name"]}</strong>.</div>
         {perf_html}
     """, unsafe_allow_html=True)
-    
+
+    fav_label = "❤️ In Favorites" if is_fav else "🤍 Add to Favorites"
+    if st.button(fav_label, key=f"fav_{fund_info['name']}"):
+        if is_fav:
+            st.session_state["favorites"].remove(fund_info["name"])
+        else:
+            st.session_state["favorites"].append(fund_info["name"])
+        st.rerun()
+
     if nav_df is not None:
         render_performance_chart(nav_df, fund_info["name"])
+    
+    sector_data = fund_data.get("portfolio", {}).get("sector_allocation", [])
+    if sector_data:
+        render_sector_chart(sector_data, fund_info["name"])
         
     st.markdown(f"""
         {holdings_html}
@@ -628,6 +665,117 @@ def render_comparison_table():
     </div>
     """, unsafe_allow_html=True)
 
+def render_stp_calculator():
+    st.markdown("""
+    <div class="fact-card">
+        <div class="fact-badge">🧮 STP Calculator</div>
+        <div class="fact-text">Systematic Transfer Plan: Move money from one fund to another monthly.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    cols = st.columns(3)
+    with cols[0]:
+        total_lumpsum = st.number_input("Total Lumpsum (₹)", min_value=10000, value=100000, step=5000)
+    with cols[1]:
+        transfer_amt = st.number_input("Monthly Transfer (₹)", min_value=1000, value=5000, step=1000)
+    with cols[2]:
+        debt_return = st.slider("Source Fund Return (%)", 1, 10, 6)
+    
+    equity_return = st.slider("Target Fund Return (%)", 1, 20, 12)
+    months = int(total_lumpsum / transfer_amt)
+    
+    # Simple simulation
+    source_bal = total_lumpsum
+    target_bal = 0
+    for _ in range(months):
+        source_bal = (source_bal - transfer_amt) * (1 + debt_return/100/12)
+        target_bal = (target_bal + transfer_amt) * (1 + equity_return/100/12)
+    
+    res_cols = st.columns(2)
+    res_cols[0].metric("Final Source Bal", f"₹{source_bal:,.0f}")
+    res_cols[1].metric("Final Target Bal", f"₹{target_bal:,.0f}")
+    st.info(f"💡 This STP will take approx **{months} months** to complete.")
+
+def render_swp_calculator():
+    st.markdown("""
+    <div class="fact-card">
+        <div class="fact-badge">🧮 SWP Calculator</div>
+        <div class="fact-text">Systematic Withdrawal Plan: Fixed monthly income from your investment.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    cols = st.columns(3)
+    with cols[0]:
+        initial = st.number_input("Initial Corpus (₹)", min_value=50000, value=500000, step=10000)
+    with cols[1]:
+        withdrawal = st.number_input("Monthly Withdrawal (₹)", min_value=1000, value=10000, step=1000)
+    with cols[2]:
+        growth = st.slider("Annual Growth (%)", 1, 15, 8)
+    
+    years = st.slider("Duration (Years)", 1, 30, 10)
+    
+    bal = initial
+    total_withdrawn = 0
+    for _ in range(years * 12):
+        bal = (bal - withdrawal) * (1 + growth/100/12)
+        total_withdrawn += withdrawal
+        if bal <= 0:
+            bal = 0
+            break
+            
+    res_cols = st.columns(2)
+    res_cols[0].metric("Total Withdrawn", f"₹{total_withdrawn:,.0f}")
+    res_cols[1].metric("Final Balance", f"₹{bal:,.0f}")
+
+def render_tax_estimator():
+    st.markdown("""
+    <div class="fact-card">
+        <div class="fact-badge">🧮 Tax Savings Estimator (Section 80C)</div>
+        <div class="fact-text">How much tax can you save by investing in SBI ELSS?</div>
+    </div>
+    """, unsafe_allow_html=True)
+    income_slab = st.selectbox("Your Income Tax Slab", ["10%", "20%", "30%"])
+    invest_amt = st.slider("ELSS Investment Amount (₹)", 1000, 150000, 50000)
+    
+    tax_rate = int(income_slab.replace("%", "")) / 100
+    savings = invest_amt * tax_rate
+    
+    st.success(f"🎉 You can save approximately **₹{savings:,.0f}** in taxes!")
+    st.caption("Note: Max limit for 80C is ₹1.5 Lakhs per year. Includes Surcharge/Cess as applicable.")
+
+def render_mock_portfolio():
+    if "portfolio" not in st.session_state:
+        st.session_state["portfolio"] = []
+    
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 💼 My Mock Portfolio")
+    
+    if not st.session_state["portfolio"]:
+        st.sidebar.info("Add investments to track them here!")
+    else:
+        total_inv = 0
+        for item in st.session_state["portfolio"]:
+            total_inv += item["amount"]
+            st.sidebar.markdown(f"**{item['fund']}**")
+            st.sidebar.markdown(f"Inv: ₹{item['amount']:,} @ {item['date']}")
+        
+        st.sidebar.metric("Total Invested", f"₹{total_inv:,}")
+        if st.sidebar.button("Clear Portfolio"):
+            st.session_state["portfolio"] = []
+            st.rerun()
+
+    with st.expander("➕ Log Mock Investment"):
+        p_cols = st.columns(2)
+        p_fund = p_cols[0].selectbox("Select Fund", [f["name"] for f in FUND_MAP])
+        p_amt = p_cols[1].number_input("Amount (₹)", min_value=500, value=5000, step=500)
+        if st.button("Add to Portfolio"):
+            st.session_state["portfolio"].append({
+                "fund": p_fund,
+                "amount": p_amt,
+                "date": datetime.now().strftime("%d %b %Y")
+            })
+            st.success(f"Added ₹{p_amt:,} in {p_fund} to portfolio!")
+            st.rerun()
+
+
 # =====================================================================
 # Main processing
 # =====================================================================
@@ -657,6 +805,20 @@ def process_query(query):
     if any(kw in q_norm for kw in ["sip calculator", "calculate sip", "how much will i get", "sip returns calculator", "calculate return"]):
         render_sip_calculator()
         return
+
+    # STP/SWP/Tax
+    if "stp" in q_norm:
+        render_stp_calculator()
+        return
+    if "swp" in q_norm:
+        render_swp_calculator()
+        return
+    if "tax" in q_norm and ("save" in q_norm or "savings" in q_norm or "estimator" in q_norm):
+        render_tax_estimator()
+        return
+    if "portfolio" in q_norm and not any(kw in q_norm for kw in ["holdings", "allocation"]):
+        st.info("Check the sidebar or use the 'Log Mock Investment' section below!")
+
 
     fund = detect_fund(q)
 
@@ -727,6 +889,9 @@ chip_queries = [
     ("📋 Section 80C", "How does ELSS save tax under Section 80C?"),
     ("⚖️ Compare All Funds", "compare all funds"),
     ("📅 Inception Dates", "What is the inception date of SBI Flexicap?"),
+    ("🔄 STP Calc", "STP Calculator"),
+    ("💵 SWP Calc", "SWP Calculator"),
+    ("🛡️ Tax Savings", "tax savings estimator"),
 ]
 cols = st.columns(4)
 for i, (label, query_text) in enumerate(chip_queries):
@@ -776,6 +941,17 @@ if st.button("🔍 Search", use_container_width=True, type="primary"):
 elif st.session_state.get("query") and st.session_state["query"] != st.session_state.get("last_query"):
     st.session_state["last_query"] = st.session_state["query"]
     process_query(st.session_state["query"])
+
+# Render Sidebar Portfolio
+render_mock_portfolio()
+
+# Favorites section
+if st.session_state.get("favorites"):
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### ❤️ Favorites")
+    for fav in st.session_state["favorites"]:
+        st.sidebar.markdown(f"- {fav}")
+
 
 # Footer
 st.markdown("""

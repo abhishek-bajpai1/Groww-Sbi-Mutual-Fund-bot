@@ -1,8 +1,9 @@
 {
     "scheme_name": "SBI ELSS Tax Saver Fund",
     "scheme_summary": "An open-ended equity linked saving scheme with a statutory lock in of 3 years and tax benefit.",
+    "category": "Equity: ELSS",
     "aum": {
-        "amount": 25000,
+        "amount": 24800,
         "unit": "Cr",
         "as_on": "Jan 2025"
     },
@@ -13,11 +14,11 @@
     "performance": {
         "regular_growth": {
             "cagr": {
-                "1y": "18.5%",
+                "1y": "17.8%",
                 "3y": "16.2%",
-                "5y": "15.8%",
-                "10y": "14.9%",
-                "since_inception": "15.5%"
+                "5y": "15.5%",
+                "10y": "14.2%",
+                "since_inception": "13.6%"
             }
         }
     },
@@ -25,23 +26,61 @@
         "top_holdings": [
             {
                 "name": "ICICI BANK LTD.",
-                "percentage": "8.50%"
-            },
-            {
-                "name": "HDFC BANK LTD.",
-                "percentage": "7.20%"
+                "percentage": "8.10%"
             },
             {
                 "name": "RELIANCE INDUSTRIES LTD.",
-                "percentage": "6.80%"
+                "percentage": "6.90%"
+            },
+            {
+                "name": "HDFC BANK LTD.",
+                "percentage": "6.20%"
             },
             {
                 "name": "INFOSYS LTD.",
-                "percentage": "5.10%"
+                "percentage": "5.40%"
+            },
+            {
+                "name": "LARSEN & TOUBRO LTD.",
+                "percentage": "4.80%"
             },
             {
                 "name": "AXIS BANK LTD.",
-                "percentage": "4.50%"
+                "percentage": "4.20%"
+            },
+            {
+                "name": "STATE BANK OF INDIA",
+                "percentage": "3.90%"
+            },
+            {
+                "name": "M&M LTD.",
+                "percentage": "3.10%"
+            }
+        ],
+        "sector_allocation": [
+            {
+                "sector": "Financial Services",
+                "percentage": 30.8
+            },
+            {
+                "sector": "Information Technology",
+                "percentage": 15.4
+            },
+            {
+                "sector": "Oil, Gas & Consumable Fuels",
+                "percentage": 9.2
+            },
+            {
+                "sector": "Automobile & Auto Components",
+                "percentage": 7.8
+            },
+            {
+                "sector": "Capital Goods",
+                "percentage": 6.9
+            },
+            {
+                "sector": "Others",
+                "percentage": 29.9
             }
         ]
     },

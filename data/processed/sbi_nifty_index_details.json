@@ -1,23 +1,24 @@
 {
     "scheme_name": "SBI Nifty Index Fund",
     "scheme_summary": "An open-ended scheme replicating/tracking Nifty 50 Index.",
+    "category": "Index Fund",
     "aum": {
-        "amount": 10000,
+        "amount": 7500,
         "unit": "Cr",
         "as_on": "Jan 2025"
     },
     "nav": {
-        "value": 185.70,
+        "value": 210.85,
         "as_on": "Jan 2025"
     },
     "performance": {
         "regular_growth": {
             "cagr": {
-                "1y": "21.5%",
-                "3y": "15.8%",
-                "5y": "14.2%",
-                "10y": "13.1%",
-                "since_inception": "12.8%"
+                "1y": "19.5%",
+                "3y": "14.8%",
+                "5y": "13.2%",
+                "10y": "12.5%",
+                "since_inception": "11.8%"
             }
         }
     },
@@ -25,7 +26,7 @@
         "top_holdings": [
             {
                 "name": "HDFC BANK LTD.",
-                "percentage": "11.50%"
+                "percentage": "11.20%"
             },
             {
                 "name": "RELIANCE INDUSTRIES LTD.",
@@ -33,15 +34,53 @@
             },
             {
                 "name": "ICICI BANK LTD.",
-                "percentage": "7.90%"
+                "percentage": "7.50%"
             },
             {
                 "name": "INFOSYS LTD.",
-                "percentage": "5.80%"
+                "percentage": "5.20%"
+            },
+            {
+                "name": "LARSEN & TOUBRO LTD.",
+                "percentage": "4.40%"
             },
             {
                 "name": "ITC LTD.",
-                "percentage": "4.50%"
+                "percentage": "4.10%"
+            },
+            {
+                "name": "TCS LTD.",
+                "percentage": "3.80%"
+            },
+            {
+                "name": "AXIS BANK LTD.",
+                "percentage": "3.50%"
+            }
+        ],
+        "sector_allocation": [
+            {
+                "sector": "Financial Services",
+                "percentage": 34.5
+            },
+            {
+                "sector": "Information Technology",
+                "percentage": 13.8
+            },
+            {
+                "sector": "Oil, Gas & Consumable Fuels",
+                "percentage": 11.2
+            },
+            {
+                "sector": "Fast Moving Consumer Goods",
+                "percentage": 9.4
+            },
+            {
+                "sector": "Automobile & Auto Components",
+                "percentage": 6.7
+            },
+            {
+                "sector": "Others",
+                "percentage": 24.4
             }
         ]
     },

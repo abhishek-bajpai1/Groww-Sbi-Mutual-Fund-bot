@@ -1,6 +1,7 @@
 {
     "scheme_name": "SBI Large Cap Fund",
     "scheme_summary": "An open-ended equity scheme predominantly investing in large cap stocks.",
+    "category": "Equity: Large Cap",
     "aum": {
         "amount": 35000,
         "unit": "Cr",
@@ -42,6 +43,44 @@
             {
                 "name": "LARSEN & TOUBRO LTD.",
                 "percentage": "4.50%"
+            },
+            {
+                "name": "TCS LTD.",
+                "percentage": "4.10%"
+            },
+            {
+                "name": "KOTAK MAHINDRA BANK",
+                "percentage": "3.90%"
+            },
+            {
+                "name": "ITC LTD.",
+                "percentage": "3.50%"
+            }
+        ],
+        "sector_allocation": [
+            {
+                "sector": "Financial Services",
+                "percentage": 35.2
+            },
+            {
+                "sector": "Information Technology",
+                "percentage": 18.5
+            },
+            {
+                "sector": "Oil, Gas & Consumable Fuels",
+                "percentage": 10.2
+            },
+            {
+                "sector": "Fast Moving Consumer Goods",
+                "percentage": 8.1
+            },
+            {
+                "sector": "Construction",
+                "percentage": 6.4
+            },
+            {
+                "sector": "Others",
+                "percentage": 21.6
             }
         ]
     },
