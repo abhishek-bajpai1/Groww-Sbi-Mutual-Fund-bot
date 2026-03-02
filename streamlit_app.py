@@ -244,36 +244,28 @@ def render_fact(answer, url, scheme):
     </div>
     """, unsafe_allow_html=True)
 
-# =====================================================================
-# LLM-based fallback (only if API key available)
-# =====================================================================
 @st.cache_resource
-def get_llm():
+def get_rag():
     try:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+        from rag import RAGAssistant
+        return RAGAssistant()
     except Exception as e:
+        st.session_state["rag_error"] = str(e)
         return None
 
 def llm_answer(query, fund_name, url):
-    llm = get_llm()
-    if not llm:
-        st.warning("General queries need an API key. Deep Dive portfolio/performance queries work without it.")
+    """Use the full RAG pipeline for questions not answered by JSON lookups."""
+    rag = get_rag()
+    if not rag:
+        err = st.session_state.get("rag_error", "RAG failed to load.")
+        st.warning(f"Could not load the full RAG assistant: `{err}`\n\nFor now, only portfolio/performance/factual queries are supported.")
         return
-    facts = SCHEME_FACTS.get(fund_name, {})
-    context = f"Scheme: {fund_name}\nExpense Ratio Regular: {facts.get('expense_ratio',{}).get('regular','N/A')}\nExpense Ratio Direct: {facts.get('expense_ratio',{}).get('direct','N/A')}\nExit Load: {facts.get('exit_load','N/A')}\nCategory: {facts.get('category','N/A')}\nLock-in: {facts.get('lock_in','N/A')}"
-    prompt = f"""You are a factual assistant for SBI Mutual Funds. Answer ONLY from the given context. Max 2 sentences. End with: Source: {url}
-
-Context:
-{context}
-
-Query: {query}"""
-    try:
-        resp = llm.invoke(prompt)
-        answer = resp.content if hasattr(resp, 'content') else str(resp)
-        render_fact(answer, url, fund_name)
-    except Exception as e:
-        st.error(f"Could not get answer: {e}")
+    with st.spinner("Searching official sources..."):
+        result = rag.get_answer(query)
+    answer = result.get("answer", "")
+    source = result.get("source", url)
+    scheme = result.get("scheme", fund_name)
+    render_fact(answer, source, scheme)
 
 # =====================================================================
 # Main processing
