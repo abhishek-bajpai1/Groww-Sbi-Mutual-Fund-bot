@@ -35,3 +35,4 @@ htmlcov/
 # Raw scraped data (temporary)
 data/raw/
 data/schemes/
+.streamlit/secrets.toml
