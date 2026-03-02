@@ -238,9 +238,50 @@ with toggle_col:
     dark = st.toggle("🌙", value=st.session_state["dark_mode"], key="theme_toggle", help="Dark / Light mode")
     st.session_state["dark_mode"] = dark
 
-# Inject dark-mode class on body via JS
-dark_js = "document.body.classList.add('dark-mode');" if st.session_state["dark_mode"] else "document.body.classList.remove('dark-mode');"
-st.markdown(f"<script>{dark_js}</script>", unsafe_allow_html=True)
+# ── Inject dark theme via CSS override (Streamlit strips <script> tags) ──
+if st.session_state["dark_mode"]:
+    st.markdown("""
+    <style>
+    /* ── Dark Mode Overrides ───────────────────────────────────── */
+    .stApp, .main, section[data-testid="stSidebar"] > div {
+        background-color: #0f1117 !important;
+    }
+    html, body, [class*="css"], .stMarkdown, p, span, label {
+        color: #c9cdd4 !important;
+    }
+    .fact-card { background: #1a1d2e !important; box-shadow: 0 8px 28px rgba(0,0,0,0.3) !important; }
+    .fact-text { color: #c9cdd4 !important; }
+    .perf-box  { background: #252840 !important; border-color: #2d3148 !important; }
+    .perf-period { color: #8b8fa8 !important; }
+    .holdings-table th { color: #8b8fa8 !important; border-color: #2d3148 !important; }
+    .holdings-table td { color: #c9cdd4 !important; border-color: #2d3148 !important; }
+    .holdings-table td strong { color: #f0f2f6 !important; }
+    .section-title { color: #f0f2f6 !important; }
+    .meta-row { border-color: #2d3148 !important; }
+    .meta-label { color: #8b8fa8 !important; }
+    .meta-value { color: #f0f2f6 !important; }
+    .refusal-card { background: #2a1f0f !important; }
+    .hero-title { color: #f0f2f6 !important; }
+    .hero-sub   { color: #8b8fa8 !important; }
+    .disclaimer { color: #8b8fa8 !important; }
+    /* Streamlit native widgets in dark mode */
+    .stTextInput > div > div > input {
+        background: #1a1d2e !important;
+        color: #c9cdd4 !important;
+        border-color: #2d3148 !important;
+    }
+    .stButton > button {
+        background: #252840 !important;
+        color: #c9cdd4 !important;
+        border-color: #2d3148 !important;
+    }
+    .stButton > button[kind="primary"] {
+        background: #00d09c !important;
+        color: white !important;
+        border-color: #00d09c !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 st.markdown('<div class="hero-title">Expert Factual Assistant</div>', unsafe_allow_html=True)
 st.markdown('<div class="hero-sub">Get instant, verified data on SBI Mutual Fund schemes.<br>Sourced directly from official disclosures, updated Jan 2025.</div>', unsafe_allow_html=True)
